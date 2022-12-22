@@ -17,10 +17,6 @@ import 'options.dart';
 import 'output_config.dart';
 
 abstract class ProtobufContainer {
-  // Internal map of proto file URIs to prefix aliases to resolve name conflicts
-  static final _importPrefixes = <String, String>{};
-  static int _idx = 0;
-
   String get package;
   String? get classname;
   String get fullName;
@@ -45,13 +41,7 @@ abstract class ProtobufContainer {
 
   String _getFileImportPrefix() {
     var path = fileGen!.protoFileUri.toString();
-    if (_importPrefixes.containsKey(path)) {
-      return _importPrefixes[path]!;
-    }
-    final alias = '\$$_idx';
-    _importPrefixes[path] = alias;
-    _idx++;
-    return alias;
+    return '\$${path.toLowerCase().replaceAll('/', '_').replaceAll('.proto', '')}';
   }
 
   /// The generator of the .pb.dart file defining this entity.
