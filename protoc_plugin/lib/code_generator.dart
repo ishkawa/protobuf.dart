@@ -34,8 +34,16 @@ abstract class ProtobufContainer {
       '${lowerCaseFirstLetter(classname)}Descriptor';
 
   String _getFileImportPrefix() {
-    final path = fileGen.protoFileUri.toString();
-    return '\$${path.toLowerCase().replaceAll('/', '_').replaceAll('.proto', '')}';
+    var path = fileGen.protoFileUri.toString();
+    if (importPrefixes.containsKey(path)) {
+      return importPrefixes[path];
+    }
+    var alias = path.split('/').last.replaceAll('.proto', '');
+    while (importPrefixes.containsValue(alias)) {
+      alias = '_$alias';
+    }
+    importPrefixes[path] = alias;
+    return alias;
   }
 
   /// The generator of the .pb.dart file defining this entity.
