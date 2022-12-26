@@ -38,9 +38,9 @@ abstract class ProtobufContainer {
     if (importPrefixes.containsKey(path)) {
       return importPrefixes[path];
     }
-    var alias = path.split('/').last.replaceAll('.proto', '');
+    var alias = '\$' + path.split('/').last.replaceAll('.proto', '');
     while (importPrefixes.containsValue(alias)) {
-      alias = '_$alias';
+      alias = alias.replaceFirst('\$', '\$_');
     }
     importPrefixes[path] = alias;
     return alias;
